@@ -10,15 +10,15 @@ data class MangaResponse(
 data class MangaDto(
     val id: String,
     val title: String,
-    val image_url: String,
-    val description: String
+    @SerializedName("thumb") val imageUrl: String,
+    @SerializedName("summary") val description: String
 )
 
 fun MangaDto.toEntity(): MangaEntity {
     return MangaEntity(
         id = this.id,
         title = this.title,
-        imageUrl = this.image_url,
+        imageUrl = this.imageUrl,
         description = this.description
     )
 }

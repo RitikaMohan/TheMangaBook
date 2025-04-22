@@ -33,4 +33,10 @@ class UserRepositoryImpl(
     override suspend fun signOut(email: String) {
         userDao.updateSignInStatus(email, false)
     }
+
+    override suspend fun registerUser(user: User) {
+        val existing = userDao.getUserByEmail(user.email)
+        if (existing != null) throw Exception("User already exists")
+        userDao.insertUser(user.toEntity())
+    }
 }
