@@ -98,5 +98,6 @@ dependencies {
     implementation("androidx.camera:camera-mlkit-vision:1.4.2")
 
     implementation("com.google.guava:guava:32.1.2-jre")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
 }

@@ -15,28 +15,54 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.themangabook.presentation.components.MangaCard
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.LaunchedEffect
+import com.example.themangabook.presentation.components.MangaGridItem
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MangaScreen(
     viewModel: MangaViewModel = hiltViewModel(),
     onMangaClick: (String) -> Unit
 ) {
-    Log.d("MangaScreen", "Composable is being rendered") // if this shows up, Hilt is the issue
     val state = viewModel.uiState
 
-    LaunchedEffect(Unit) {
-        Log.d("MangaScreen", "Launched - Manga list size: ${state.mangaList.size}")
-    }
-    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-        if (state.isLoading) {
-            CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-        } else if (state.errorMessage != null) {
-            Text("Error: ${state.errorMessage}", color = Color.Red)
-        } else {
-            LazyColumn {
-                items(state.mangaList) { manga ->
-                    MangaCard(manga = manga, onClick = { onMangaClick(manga.id) })
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(8.dp)) {
+
+        when {
+            state.isLoading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            state.errorMessage != null -> {
+                Text(
+                    text = "Error: ${state.errorMessage}",
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+            else -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.mangaList) { manga ->
+                        MangaGridItem(manga = manga) {
+                            onMangaClick(manga.id)
+                        }
+                    }
                 }
             }
         }

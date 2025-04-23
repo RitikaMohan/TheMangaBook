@@ -40,7 +40,13 @@ fun MainScreen() {
             modifier = Modifier.padding(padding)
         ) {
             composable(Screen.Manga.route) {
-                MangaScreen(onMangaClick = { /* navigate to detail if needed */ })
+                MangaScreen(onMangaClick = { mangaId ->
+                    navController.navigate(Screen.MangaDetails.createRoute(mangaId))
+                })
+            }
+            composable(Screen.MangaDetails.route) { backStackEntry ->
+                val mangaId = backStackEntry.arguments?.getString("mangaId") ?: return@composable
+                MangaDetailsScreen(mangaId = mangaId)
             }
             composable(Screen.FaceRecognition.route) {
                 FaceRecognitionScreen()
