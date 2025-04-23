@@ -7,5 +7,5 @@ sealed class Screen(val route: String) {
     object MangaDetails : Screen("manga_details/{mangaId}") {
         fun createRoute(mangaId: String) = "manga_details/$mangaId"
     }
-    object FaceRecognition : Screen("face_recognition")
+    object FaceRecognition : Screen("face")
 }

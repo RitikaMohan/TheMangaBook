@@ -16,22 +16,19 @@ import java.util.Locale
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
-        Screen.Manga,
-        Screen.FaceRecognition
-    )
+    val items = listOf(Screen.Manga, Screen.FaceRecognition)
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
         items.forEach { screen ->
             NavigationBarItem(
-                selected = currentRoute?.startsWith(screen.route) == true,
+                selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
-                        popUpTo(Screen.Manga.route) { inclusive = false }
                         launchSingleTop = true
+                        restoreState = true
+                        popUpTo(Screen.Manga.route)
                     }
                 },
                 icon = {
@@ -40,7 +37,7 @@ fun BottomNavigationBar(navController: NavController) {
                         contentDescription = screen.route
                     )
                 },
-                label = { Text(screen.route.capitalize(Locale.ROOT)) }
+                label = { Text(screen.route.replaceFirstChar { it.uppercase() }) }
             )
         }
     }

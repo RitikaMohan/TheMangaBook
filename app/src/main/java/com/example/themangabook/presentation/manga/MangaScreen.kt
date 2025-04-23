@@ -23,8 +23,6 @@ fun MangaScreen(
     onMangaClick: (String) -> Unit
 ) {
     Log.d("MangaScreen", "Composable is being rendered") // if this shows up, Hilt is the issue
-
-    Text("Just showing static Manga screen")
     val state = viewModel.uiState
 
     LaunchedEffect(Unit) {
@@ -39,7 +37,6 @@ fun MangaScreen(
             LazyColumn {
                 items(state.mangaList) { manga ->
                     MangaCard(manga = manga, onClick = { onMangaClick(manga.id) })
-                    Text("Loaded: ${state.mangaList.size} manga")
                 }
             }
         }
