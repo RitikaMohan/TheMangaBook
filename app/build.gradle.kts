@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.AaptOptions
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -39,6 +41,9 @@ android {
     buildFeatures {
         compose = true
     }
+    aaptOptions {
+        noCompress("blaze_face_short_range.tflite")
+    }
 }
 
 dependencies {
@@ -52,6 +57,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.play.services.mlkit.face.detection)
+    implementation(libs.litert.api)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,5 +107,7 @@ dependencies {
 
     implementation("com.google.guava:guava:32.1.2-jre")
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
+
 
 }

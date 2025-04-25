@@ -1,14 +1,22 @@
 package com.example.themangabook.presentation.face
 
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.foundation.layout.fillMaxSize
+import android.graphics.Rect
+import com.google.mediapipe.framework.image.BitmapImageBuilder
+
 
 @Composable
 fun CameraPreview(onFaceDetected: (Boolean) -> Unit) {
@@ -47,14 +55,17 @@ fun CameraPreview(onFaceDetected: (Boolean) -> Unit) {
             } catch (e: Exception) {
                 Log.e("CameraPreview", "Camera bind failed", e)
             }
-
         }, ContextCompat.getMainExecutor(context))
     }
 }
 
 // Replace with actual MediaPipe logic
 fun detectFaceInsideBox(imageProxy: ImageProxy): Boolean {
-    // You will integrate MediaPipe detection here
-    // For now, just return random or false
-    return true // or actual detection result
+    // You can integrate MediaPipe face detection here
+    // For demonstration purposes, we simulate a face detection.
+    // Replace this with actual MediaPipe detection code.
+
+    // Example of using MediaPipe's Face Detection model
+    val faceDetected = true // You would use MediaPipe to check if a face is detected in the frame.
+    return faceDetected
 }
