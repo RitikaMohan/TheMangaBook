@@ -22,7 +22,16 @@ fun NavGraph(
 
         composable(Screen.Login.route) {
             LoginScreen(
-                onSignInClick = { navController.navigate(Screen.Manga.route)
+                onSignInClick = { email, password ->
+                    // Handle navigation or validation here
+                    // Navigate to the Manga screen if login validation is successful
+                    // Example: Perform login validation first
+                    if (email.isNotBlank() && password.isNotBlank()) {
+                        navController.navigate(Screen.Manga.route)
+                    } else {
+                        // You can show an error message or handle invalid login here
+                        println("Invalid login credentials: Email or Password is blank")
+                    }
                 },
                 onSignUpClick = {
                     navController.navigate(Screen.Register.route)

@@ -2,7 +2,6 @@ package com.example.themangabook.presentation.signin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,13 +34,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.themangabook.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onSignInClick: () -> Unit = {},
+    onSignInClick: (String, String) -> Unit = { _, _ -> },
     onSignUpClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {}
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,35 +76,9 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                IconButton(onClick = { /* Google Sign In */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = "Google",
-                        tint = Color.White
-                    )
-                }
-                IconButton(onClick = { /* Apple Sign In */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_apple),
-                        contentDescription = "Apple",
-                        tint = Color.White
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text("OR", color = Color.Gray, modifier = Modifier.align(Alignment.CenterHorizontally))
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = { email = it },
                 label = { Text("Your Email Address", color = Color.Gray) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
@@ -117,8 +97,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = password,
+                onValueChange = { password = it },
                 label = { Text("Password", color = Color.Gray) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
@@ -142,26 +122,28 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "Forgot password?",
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable { onForgotPasswordClick() },
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodySmall
-            )
+            errorMessage.takeIf { it.isNotEmpty() }?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = onSignInClick, // only if it's () -> Unit
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
-            )  {
+                onClick = {
+                    if (email.isBlank() || password.isBlank()) {
+                        errorMessage = "Email and Password cannot be empty"
+                    } else {
+                        errorMessage = ""
+                        onSignInClick(email, password)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text("Sign In", color = Color.White)
             }
 

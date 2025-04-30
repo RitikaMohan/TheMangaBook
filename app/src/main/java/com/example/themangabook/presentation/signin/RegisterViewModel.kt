@@ -17,19 +17,15 @@ class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var email by mutableStateOf("")
-    var password by mutableStateOf("")
-    var error by mutableStateOf<String?>(null)
     var navigateToHome by mutableStateOf(false)
     var isLoading by mutableStateOf(false)
+    var error by mutableStateOf<String?>(null)
 
-    @SuppressLint("RestrictedApi")
-    fun onRegister() {
+    fun onRegister(email: String, password: String) {
         viewModelScope.launch {
             isLoading = true
             try {
-                val newUser =
-                    com.example.themangabook.domain.model.User(email.trim(), password, true)
+                val newUser = com.example.themangabook.domain.model.User(email, password, true)
                 userRepository.registerUser(newUser)
                 navigateToHome = true
             } catch (e: Exception) {

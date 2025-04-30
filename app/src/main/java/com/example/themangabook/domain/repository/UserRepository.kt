@@ -8,4 +8,5 @@ interface UserRepository {
     suspend fun registerUser(user: User)
     suspend fun getSignedInUser(): User?
     suspend fun signOut(email: String)
+    suspend fun isUserRegistered(email: String): Boolean
 }
