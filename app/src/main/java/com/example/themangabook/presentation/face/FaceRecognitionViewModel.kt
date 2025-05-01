@@ -21,29 +21,32 @@ class FaceRecognitionViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val detector: FaceDetector
-
-    init {
-        val baseOptions = BaseOptions.builder()
-            .setModelAssetPath("blaze_face_short_range.tflite")
-            .build()
-
-        val options = FaceDetector.FaceDetectorOptions.builder()
-            .setBaseOptions(baseOptions)
-            .setMinDetectionConfidence(0.5f)
-            .setRunningMode(RunningMode.IMAGE)
-            .build()
-
-        detector = FaceDetector.createFromOptions(context, options)
-    }
+    private var detector: FaceDetector? = null
 
     var uiState by mutableStateOf(FaceRecognitionUiState())
         private set
 
+    private fun initDetectorIfNeeded() {
+        if (detector == null) {
+            val baseOptions = BaseOptions.builder()
+                .setModelAssetPath("blaze_face_short_range.tflite")
+                .build()
+
+            val options = FaceDetector.FaceDetectorOptions.builder()
+                .setBaseOptions(baseOptions)
+                .setMinDetectionConfidence(0.5f)
+                .setRunningMode(RunningMode.IMAGE)
+                .build()
+
+            detector = FaceDetector.createFromOptions(context, options)
+        }
+    }
+
+
     suspend fun detectFace(image: Bitmap) {
         val mpImage = BitmapImageBuilder(image).build()
-        val result = detector.detect(mpImage)
-        val face = result.detections().firstOrNull()
+        val result = detector?.detect(mpImage)
+        val face = result?.detections()?.firstOrNull()
 
         uiState = if (face != null) {
             val boundingBox = face.boundingBox()
@@ -62,5 +65,9 @@ class FaceRecognitionViewModel @Inject constructor(
         } else {
             uiState.copy(faceBox = null)
         }
+    }
+    override fun onCleared() {
+        detector?.close()
+        super.onCleared()
     }
 }

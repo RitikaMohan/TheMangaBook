@@ -16,10 +16,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun signIn(email: String, password: String): User {
-        val existingUserEntity = userDao.getUserByEmail(email)
-        if (existingUserEntity == null) {
-            throw Exception("User not found")
-        }
+        val existingUserEntity = userDao.getUserByEmail(email) ?: throw Exception("User not found")
         if (existingUserEntity.password != password) {
             throw Exception("Incorrect password")
         }
@@ -35,7 +32,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getSignedInUser(): User? {
-        TODO("Not yet implemented")
+        return userDao.getSignedInUser()?.toDomain()
     }
 
     override suspend fun signOut(email: String) {

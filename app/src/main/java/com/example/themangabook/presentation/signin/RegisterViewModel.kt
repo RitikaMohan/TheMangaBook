@@ -18,10 +18,16 @@ class RegisterViewModel @Inject constructor(
 ) : ViewModel() {
 
     var navigateToHome by mutableStateOf(false)
-    var isLoading by mutableStateOf(false)
+    var email by mutableStateOf("")
+    var password by mutableStateOf("")
     var error by mutableStateOf<String?>(null)
+    var isLoading by mutableStateOf(false)
 
     fun onRegister(email: String, password: String) {
+        if (email.isBlank() || password.isBlank()) {
+            error = "Email and Password cannot be empty"
+            return
+        }
         viewModelScope.launch {
             isLoading = true
             try {

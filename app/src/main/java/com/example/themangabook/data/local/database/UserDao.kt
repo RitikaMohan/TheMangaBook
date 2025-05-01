@@ -19,5 +19,5 @@ interface UserDao {
     suspend fun updateSignInStatus(email: String, status: Boolean)
 
     @Query("SELECT * FROM users WHERE isSignedIn = 1 LIMIT 1")
-    suspend fun getSignedInUser(): User?
+    suspend fun getSignedInUser(): UserEntity?
 }

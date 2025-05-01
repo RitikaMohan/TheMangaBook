@@ -9,7 +9,10 @@ import com.example.themangabook.presentation.face.FaceRecognitionScreen
 import com.example.themangabook.presentation.manga.MangaDetailsScreen
 import com.example.themangabook.presentation.manga.MangaScreen
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.themangabook.presentation.launcher.LauncherScreen
+import com.example.themangabook.presentation.signin.LoginViewModel
 
 @Composable
 fun NavGraph(
@@ -17,30 +20,39 @@ fun NavGraph(
     modifier: Modifier = Modifier
 ) {
 
+    NavHost(navController = navController, startDestination = Screen.Launcher.route, modifier = modifier) {
 
-    NavHost(navController = navController, startDestination = Screen.Login.route, modifier = modifier) {
+        composable(Screen.Launcher.route) {
+            LauncherScreen(
+                onNavigateToHome = {
+                    navController.navigate(Screen.Manga.route) {
+                        popUpTo(Screen.Launcher.route) { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Launcher.route) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         composable(Screen.Login.route) {
             LoginScreen(
-                onSignInClick = { email, password ->
-                    // Handle navigation or validation here
-                    // Navigate to the Manga screen if login validation is successful
-                    // Example: Perform login validation first
-                    if (email.isNotBlank() && password.isNotBlank()) {
-                        navController.navigate(Screen.Manga.route)
-                    } else {
-                        // You can show an error message or handle invalid login here
-                        println("Invalid login credentials: Email or Password is blank")
+                onLoginSuccess = {
+                    navController.navigate(Screen.Manga.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 },
                 onSignUpClick = {
                     navController.navigate(Screen.Register.route)
                 },
                 onForgotPasswordClick = {
-                    // TODO: Implement forgot password screen
+                    // Optional
                 }
             )
         }
+
 
         composable(Screen.Register.route) {
             RegisterScreen(

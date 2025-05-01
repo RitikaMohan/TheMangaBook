@@ -20,13 +20,14 @@ fun MainScreen() {
             val currentRoute =
                 navController.currentBackStackEntryAsState().value?.destination?.route
             if (currentRoute in listOf(Screen.Manga.route, Screen.FaceRecognition.route)) {
-                BottomNavigationBar(navController = navController)
-            }
+            BottomNavigationBar(navController = navController)
         }
-    ) { padding ->
-        NavGraph(
-            navController = navController,
-            modifier = Modifier.padding(padding)
-        )
-    }
+}
+) {
+    padding ->
+    NavGraph(
+        navController = navController,
+        modifier = Modifier.padding(padding)
+    )
+}
 }
